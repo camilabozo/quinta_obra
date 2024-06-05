@@ -4,6 +4,7 @@ let figuraDibujada = false; // Bandera para controlar la creación de figuras
 const TIEMPO_INACTIVIDAD = 10000; // 10 segundos
 const TIEMPO_RETARDO_ULTIMO_DIBUJO = 2000; //2 segundos
 let reduciendoOpacidad = false;
+let b = 0;
 
 function setup () {
     createCanvas(innerWidth, innerHeight);
@@ -12,6 +13,19 @@ function setup () {
   }
   
 function draw () {
+  if(mouse.velocidad()>50){
+    b++;
+    if(b>255){
+      b = 0;
+    }
+  
+  }else{
+    b-=0.2;
+    b = max(0,b);
+  
+  }
+  
+  background(b);
   for (let i = 0; i < figuras.length; i++) {
     figuras[i].dibujar();
   }

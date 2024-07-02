@@ -6,9 +6,7 @@ class Maya {
         this.angulo = 0;
         this.rotacion = 0.01;
         this.imagen = imagen;
-        this.randomPosX1 = random(0, width/2-100);
-        this.randomPosX2 = random (width/2 + 100, width);
-        this.x = random(this.randomPosX1, this.randomPosX2);
+        this.x = random([random(0, width / 2 - 100), random(width / 2 + 100, width)]);
         this.y = random(0, height - 200);
     }
 
@@ -36,10 +34,10 @@ class Maya {
     }
 
 
-    reducirOpacidad() {
-        if(this.opacidad > 0){
-            this.opacidad--;
-        }
-        this.opacidad = min(this.opacidad, 0); // Asegura que la opacidad no sea negativa
-    }
+    // reducirOpacidad() {
+    //     if(this.opacidad > 0){
+    //         this.opacidad--;
+    //     }
+    //     this.opacidad = min(this.opacidad, 0); // Asegura que la opacidad no sea negativa
+    // }
 }

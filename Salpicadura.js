@@ -4,16 +4,15 @@ class Salpicadura {
 
     constructor() {
         // Calcular la posición aleatoria una vez
-        this.x = 0;
+        this.tamanio = 300;
+        this.x = random(0, width - this.tamanio);
         this.y = this.determinarMitad();
-        this.width = 300;
-        this.height = 300;
         this.opacidad = 255; // Inicializa la opacidad al máximo
         this.color = random(255);
         this.imagenes = [];
         this.cantidadImagenesCamino1 = 32;
         this.imagenesCargadas = false; // Bandera para saber si las imágenes han sido cargadas
-        this.dibujarEnMitadSuperior = true; // Variable para controlar la mitad
+        // this.dibujarEnMitadSuperior = true; // Variable para controlar la mitad
     }
 
     cargarImagenes(){
@@ -27,9 +26,9 @@ class Salpicadura {
     determinarMitad() {
         let yPos;
         if (dibujarEnMitadSuperior) {
-            yPos = random(0, height / 2); // Mitad superior, asegurando visibilidad
+            yPos = floor(random(0, height / 2 - this.tamanio)); // Mitad superior, asegurando visibilidad
         } else {
-            yPos = random(height / 2, height); // Mitad inferior, asegurando visibilidad
+            yPos = floor(random(height / 2, height - this.tamanio)); // Mitad inferior, asegurando visibilidad
         }
         dibujarEnMitadSuperior = !dibujarEnMitadSuperior; // Alternar mitad
         return yPos;
@@ -41,18 +40,8 @@ class Salpicadura {
             this.cargarImagenes(); // Carga las imágenes solo una vez
         }
 
-        // let x = 200; // Calcular la posición x aleatoria
-        // let y = this.determinarMitad(); // Calcular la posición y según la mitad
-        
         for (let i = 0; i < this.cantidadImagenesCamino1; i++) {
-            image(this.imagenes[i], this.x, this.y, this.width, this.height);
+            image(this.imagenes[i], this.x, this.y, this.tamanio, this.tamanio);
         }
-    }
-
-    reducirOpacidad() {
-        if(this.opacidad > 0){
-            this.opacidad--;
-        }
-        this.opacidad = min(this.opacidad, 0); // Asegura que la opacidad no sea negativa
     }
 }

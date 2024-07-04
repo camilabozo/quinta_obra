@@ -1,13 +1,13 @@
 class Maya {
 
     constructor(imagen) {
-        this.tamanio = random(200, 300);
+        this.tamanio = random(100, 250);
         this.opacidad = 255; // Inicializa la opacidad al máximo
         this.angulo = 0;
         this.rotacion = 0.01;
         this.imagen = imagen;
-        this.x = random([random(0, width / 2 - 100), random(width / 2 + 100, width)]);
-        this.y = random(0, height - 200);
+        this.x = random(0, width);
+        this.y = random(0, height);
     }
 
     dibujar() {
@@ -32,12 +32,4 @@ class Maya {
     cambiarDireccion() {
         this.rotacion *= -1;  // Cambia el signo de la velocidad de rotación
     }
-
-
-    // reducirOpacidad() {
-    //     if(this.opacidad > 0){
-    //         this.opacidad--;
-    //     }
-    //     this.opacidad = min(this.opacidad, 0); // Asegura que la opacidad no sea negativa
-    // }
 }

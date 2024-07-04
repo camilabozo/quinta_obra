@@ -1,7 +1,7 @@
 class Factura {
 
     constructor(imagen) {
-        this.tamanio = random(100, 400);
+        this.tamanio = random(300, 800);
         this.imagen = imagen;
         this.x = random([random(0, width / 2 - 100), random(width / 2 + 100, width)]);
         this.y = random(0, height - 200);

@@ -12,6 +12,7 @@ let imagenesSalpicadura2 = [];
 let mayas = [];
 let imagenesMayas = [];
 let ovalosDeColor = [];
+let tipoDeOvalo = null;
 let imagenesOvalosDeColoresFrios = [];
 let imagenesOvalosDeColoresCalidos = [];
 let facturas = [];
@@ -32,10 +33,7 @@ function setup () {
   temporizadorOvalosDeColor = new Temporizador(TIEMPO_RETARDO_ULTIMO_DIBUJO);
   temporizadorFacturas = new Temporizador(TIEMPO_RETARDO_ULTIMO_DIBUJO);
   temporizadorSalpicaduras = new Temporizador(TIEMPO_RETARDO_ULTIMO_DIBUJO);
-  cargarImagenesMayas();
-  cargarImagenesOvalosDeColor();
-  cargarImagenesFacturas();
-  cargarImagenesSalpicaduras();
+  cargarImagenes();
   backgroundImage = loadImage('data/background.png');
 
   temporizadorInactividad.onTimeout = () => {
@@ -44,6 +42,7 @@ function setup () {
     mayas = [];
     facturas = [];
     ovalosDeColor = [];
+    tipoDeOvalo = null;
   };
 
   temporizadorInactividad.iniciar();
@@ -51,8 +50,6 @@ function setup () {
   
 function draw () {
   background(backgroundImage, 255);
-  // background(0);
-  // mouse.registrarRecorrido();
 
   if (sonido.haySonido) {
     temporizadorInactividad.reiniciar();
@@ -68,13 +65,13 @@ function draw () {
     ovalosDeColor[i].dibujar();
   }  
   
+  for (let i = 0; i < facturas.length; i++) {
+    facturas[i].dibujar();
+  }
+  
   for (let i = 0; i < mayas.length; i++) {
     mayas[i].dibujar();
     mayas[i].actualizarRotacion();
-  }
-
-  for (let i = 0; i < facturas.length; i++) {
-    facturas[i].dibujar();
   }
   
   for (let i = 0; i < salpicaduras.length; i++) {
@@ -83,64 +80,65 @@ function draw () {
 
 }
 
-function cargarImagenesMayas(){
-  for (let i = 0; i < 4; i++) {
-    let nombre = 'data/mayas' + nf(i, 2) + '.png';
-    imagenesMayas[i] = loadImage(nombre);
+function cargarImagenes(){
+  for (let i = 0; i < 5; i++) {
+    let nombre = 'data/facturas' + nf(i, 2) + '.png';
+    imagenesFacturas[i] = loadImage(nombre);
   }
-}
 
-function cargarImagenesSalpicaduras(){
-  for (let i = 0; i < 32; i++) {
-    let nombre = 'data/salpicadura1' + nf(i, 2) + '.png';
-    imagenesSalpicadura1[i] = loadImage(nombre);
-  }
-  imagenesSalpicadura2[0] = loadImage('data/salpicadura200.png');
-}
-
-
-function cargarImagenesOvalosDeColor(){
   for (let i = 0; i < 3; i++) {
     let ovaloFrio = 'data/ovaloDeColorFrio' + nf(i, 2) + '.png';
     let ovaloCalido = 'data/ovaloDeColorCalido' + nf(i, 2) + '.png';
     imagenesOvalosDeColoresFrios[i] = loadImage(ovaloFrio);
     imagenesOvalosDeColoresCalidos[i] = loadImage(ovaloCalido);
   }
-}
 
-function cargarImagenesFacturas(){
-  for (let i = 0; i < 5; i++) {
-    let nombre = 'data/facturas' + nf(i, 2) + '.png';
-    imagenesFacturas[i] = loadImage(nombre);
+  for (let i = 0; i < 32; i++) {
+    let nombre = 'data/salpicadura1' + nf(i, 2) + '.png';
+    imagenesSalpicadura1[i] = loadImage(nombre);
+  }
+  imagenesSalpicadura2[0] = loadImage('data/salpicadura200.png');
+
+  for (let i = 0; i < 4; i++) {
+    let nombre = 'data/mayas' + nf(i, 2) + '.png';
+    imagenesMayas[i] = loadImage(nombre);
   }
 }
 
 function crearObra() {
-
   if (mayas.length < 4) {
     if (sonido.haySonido && !temporizadorMayas.isCounting) {
-      // console.log("Finalizo un sonido");
-      mayas.push(new Maya(random(imagenesMayas)));
-      temporizadorMayas.iniciar();
+        let nuevaMaya = new Maya(random(imagenesMayas));
+        if (!nuevaMaya.haySuperposicion()) {
+            mayas.push(nuevaMaya);
+            temporizadorMayas.iniciar();
+        }
     }
   }
 
   if (ovalosDeColor.length < 3) {
-    if (sonido.duration == 'LARGO' && sonido.tone == 'GRAVE' && !temporizadorOvalosDeColor.isCounting) {
-      if(sonido.volume == 'ALTO'){
-          ovalosDeColor.push(new Ovalo(random(imagenesOvalosDeColoresCalidos)));
-          console.log("dibujo uno calido");
-      }else if (sonido.volume == 'BAJO'){
-          ovalosDeColor.push(new Ovalo(random(imagenesOvalosDeColoresFrios)));
-          console.log("dibujo uno frio");
+    if (sonido.duration == 'LARGO' && sonido.tone == 'GRAVE' && !temporizadorOvalosDeColor.isCounting) { //CAMBIAR A LARGO
+
+      if(tipoDeOvalo == null){
+        tipoDeOvalo = sonido.volume == 'ALTO' ? 'CALIDO' : 'FRIO';
       }
-      temporizadorOvalosDeColor.iniciar();
+
+      let nuevoOvalo;
+      if(tipoDeOvalo == 'CALIDO'){
+        nuevoOvalo = new Ovalo(random(imagenesOvalosDeColoresCalidos)); 
+      }else{
+        nuevoOvalo = new Ovalo(random(imagenesOvalosDeColoresFrios));
+      }
+
+      if (!nuevoOvalo.haySuperposicion()){
+        ovalosDeColor.push(nuevoOvalo);
+        temporizadorOvalosDeColor.iniciar();  
+      }
     }
   }
 
-  if (facturas.length < 3) {
+  if (facturas.length < 2) {
     if (sonido.duration == 'LARGO' && sonido.tone == 'AGUDO' && !temporizadorFacturas.isCounting) {
-      // console.log("Finalizo, es largo y agudo");
       facturas.push(new Factura(random(imagenesFacturas)));
       temporizadorFacturas.iniciar();
     }
@@ -160,6 +158,13 @@ function crearObra() {
       mayas[i].cambiarDireccion();
     }
   }
+}
 
+function seSuperponen(figura1, figura2) {
+  let distX = abs(figura1.x - figura2.x);
+  let distY = abs(figura1.y - figura2.y);
+  let distancia = sqrt(distX * distX + distY * distY);
+
+  return distancia < (figura1.tamanio / 2 + figura2.tamanio / 2);
 }
 

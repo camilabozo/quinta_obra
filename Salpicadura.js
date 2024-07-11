@@ -1,5 +1,4 @@
 let dibujarEnMitadSuperior = true; // Variable global para controlar la mitad
-
 class Salpicadura {
 
     constructor(imagenes) {

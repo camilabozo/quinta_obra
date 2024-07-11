@@ -15,9 +15,9 @@ class Sonido {
         this.mic = new p5.AudioIn();            // objeto del micrófono
         userStartAudio();
         this.duracionSonidoSegundos = 0;        // variable para almacenar la duración del sonido en segundos
-        this.durationThreshold1 = 1;
-        this.durationThreshold2 = 3;
-        this.pitchThreshold = 0.11;
+        this.durationThreshold1 = 0.5;
+        this.durationThreshold2 = 1;
+        this.pitchThreshold = 0.10;
         this.duration = '';
         this.tone = '';
         this.clap = false;
@@ -73,9 +73,11 @@ class Sonido {
             this.calculateDuration();
             this.calculateVolumeLevel();
             this.clap = this.duration == 'APLAUSO' && this.maxAmplitude >= 0.22
+            console.log('------------------------------------------------------');
             console.log("Duracion: " + this.duration);
             console.log("Tono: " + this.tone);
-            console.log("Amplitud: " + this.maxAmplitude);
+            console.log("Amplitud: " + this.volume);
+            console.log('------------------------------------------------------');
             this.maxAmplitude = -1;
         }
 
@@ -91,7 +93,7 @@ class Sonido {
     }
 
     calculateDuration(){
-        if(this.duracionSonidoSegundos < this.durationThreshold1 - 0.5){
+        if(this.duracionSonidoSegundos < this.durationThreshold1){
             this.duration = 'APLAUSO';
         }else if(this.duracionSonidoSegundos > this.durationThreshold1 && this.duracionSonidoSegundos < this.durationThreshold2){
             this.duration = 'CORTO';
